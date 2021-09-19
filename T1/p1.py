@@ -31,18 +31,20 @@ def get_node_path_number(node, n):
         res = 0
         for next_node in GRAPH[node]:
             res += get_node_path_number(next_node, n - 1)
+            res %= (10 ** 9 + 7)
         CACHE[node][n] = res
         return res
 
 
-# Obtener N
-n_value = int(input("N: "))
+if __name__ == "__main__":
+    # Obtener N
+    n_value = int(input("N: "))
 
-sys.setrecursionlimit(10000)
+    sys.setrecursionlimit(10000)
 
+    result = 0
+    for node in GRAPH:
+        result += get_node_path_number(node, n_value)
+        result %= (10 ** 9 + 7)
 
-result = 0
-for node in GRAPH:
-    result += get_node_path_number(node, n_value)
-
-print(result % (10 ** 9 + 7))
+    print(result)
