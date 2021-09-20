@@ -70,7 +70,7 @@ def matrix_modexp(matrix, b):
 
 if __name__ == "__main__":
     # Obtener N
-    n_value = int(input("N: "))
+    n_value = int(input())
     if n_value == 0:
         print(0)
     else:
