@@ -75,6 +75,7 @@ def matrix_modexp(matrix, b):
     """
     Exponenciación modular de una matriz
     Complejidad dependiente de b
+    --> O(log2(b))
     """
     if b == 0:
         # Caso base, constante
