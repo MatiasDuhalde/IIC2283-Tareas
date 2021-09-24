@@ -70,12 +70,14 @@ if __name__ == "__main__":
             del sellers[s]
 
     # --------------------------------------------------------------------------
-    # O(mlog(m) + m)
+    # O(mlog(m))
     # Remove unoptimal sellers
     if sellers:
+        # Sorting is O(mlog(m))
         ordered_sellers_indices = sorted(sellers.keys())
         current_tracked_price = sellers[ordered_sellers_indices[0]]
         best_sellers[ordered_sellers_indices[0]] = current_tracked_price
+        # O(m)
         for s in ordered_sellers_indices[1:]:
             current_price = sellers[s]
             if current_price < current_tracked_price:
@@ -83,12 +85,14 @@ if __name__ == "__main__":
                 best_sellers[s] = current_tracked_price
 
     # --------------------------------------------------------------------------
-    # O(nlog(n) + n)
+    # O(nlog(n))
     # Remove unoptimal buyers
     if buyers:
+        # Sorting is O(nlog(n))
         ordered_buyers_indices = sorted(buyers.keys(), reverse=True)
         current_tracked_price = buyers[ordered_buyers_indices[0]]
         best_buyers[ordered_buyers_indices[0]] = current_tracked_price
+        # O(n)
         for e in ordered_buyers_indices[1:]:
             current_price = buyers[e]
             if current_price > current_tracked_price:
@@ -96,12 +100,20 @@ if __name__ == "__main__":
                 best_buyers[e] = current_tracked_price
 
     # --------------------------------------------------------------------------
-
-    print("------")
-    print(best_sellers)
-    print(best_buyers)
-
+    # O(n*m) ????
     # Calcular la ganancia
+    best_profit = 0
+    for e in best_buyers:
+        buy_price = best_buyers[e]
+        for s in best_sellers:
+            sell_price = best_sellers[s]
+            trade_window = e - s + 1
+            if (trade_window > 0):
+                res = trade_window * (buy_price - sell_price)
+                if res > best_profit:
+                    best_profit = res
+
+    print(best_profit)
 
     # 1 - 9966347413977789
     # 2 - 9976615254630354
