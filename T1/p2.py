@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     # --------------------------------------------------------------------------
     # O(m)
-    for s in sellers.keys():
+    for s in list(sellers.keys()):
         if s > max_end:
             del sellers[s]
 
