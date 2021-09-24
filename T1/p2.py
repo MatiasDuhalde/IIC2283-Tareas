@@ -88,15 +88,18 @@ if __name__ == "__main__":
     if buyers:
         ordered_buyers_indices = sorted(buyers.keys(), reverse=True)
         current_tracked_price = buyers[ordered_buyers_indices[0]]
-        best_buyers[ordered_sellers_indices[0]] = current_tracked_price
+        best_buyers[ordered_buyers_indices[0]] = current_tracked_price
         for e in ordered_buyers_indices[1:]:
             current_price = buyers[e]
             if current_price > current_tracked_price:
                 current_tracked_price = current_price
                 best_buyers[e] = current_tracked_price
 
-    print(len(best_sellers))
-    print(len(best_buyers))
+    # --------------------------------------------------------------------------
+
+    print("------")
+    print(best_sellers)
+    print(best_buyers)
 
     # Calcular la ganancia
 
