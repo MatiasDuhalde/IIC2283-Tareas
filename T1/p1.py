@@ -97,7 +97,7 @@ if __name__ == "__main__":
     # Obtener N
     n_value = int(input())
     if n_value == 0:
-        print(0)
+        print(4)
     else:
         # Intución: https://stackoverflow.com/a/14272475
         print(sum_matrix(matrix_modexp(GRAPH_MATRIX, n_value)) % MOD)
