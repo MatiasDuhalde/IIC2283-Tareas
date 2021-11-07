@@ -44,19 +44,19 @@ def main():
 
 if __name__ == '__main__':
     # Test once
-    # main()
+    main()
 
     # Test several
-    TEST_NUMBER = 100
-    TEST_RESULT = "000000000000000000100100000100101000110000000000000000000000"
-    counter = 0
-    for _ in range(TEST_NUMBER):
-        input_buffer = input_copy
-        input = input_buffer.readline
-        input_copy = copy(input_copy)
-        res = main()
-        if res != TEST_RESULT:
-            counter += 1
-    print("Desired error:", EPSILON)
-    print("Actual error:", counter/TEST_NUMBER)
-    print("Accomplished:", counter/EPSILON <= EPSILON)
+    # TEST_NUMBER = 100
+    # TEST_RESULT = "000000000000000000100100000100101000110000000000000000000000"
+    # counter = 0
+    # for _ in range(TEST_NUMBER):
+    #     input_buffer = input_copy
+    #     input = input_buffer.readline
+    #     input_copy = copy(input_copy)
+    #     res = main()
+    #     if res != TEST_RESULT:
+    #         counter += 1
+    # print("Desired error:", EPSILON)
+    # print("Actual error:", counter/TEST_NUMBER)
+    # print("Accomplished:", counter/EPSILON <= EPSILON)
