@@ -38,9 +38,18 @@ def main():
         results[current] += 1
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     [value, reps] = sorted_results[0]
+
+    # Check resulting value
     if (value == 0):
         try:
-            [value, reps] = sorted_results[1]
+            [new_value, reps] = sorted_results[1]
+            # Check correctness of second value
+            hits = 0
+            for i in binary_values:
+                if (i & new_value == new_value):
+                    hits += 1
+            if (hits >= ceil(n_value/2)):
+                value = new_value
         except:
             pass
     binary_result = format(value, f"0{m_value}b")
@@ -53,7 +62,7 @@ if __name__ == '__main__':
     main()
 
     # Test several
-    # TEST_NUMBER = 100
+    # TEST_NUMBER = 1000
     # TEST_RESULT = "000000010000100000000000010001000000000000000000010010001100"
     # counter = 0
     # for _ in range(TEST_NUMBER):
