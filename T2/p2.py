@@ -32,11 +32,17 @@ def main():
     results = defaultdict(int)
     for _ in range(10**(ITERATIONS)):
         current = 2**m_value - 1
-        subset = choices(binary_values, k=2*ceil(log10(n_value)))
+        subset = choices(binary_values, k=2*ceil(log10(n_value + 1)))
         for el in subset:
             current = current & el
         results[current] += 1
-    [value, repetitions] = sorted(results.items(), key=lambda x: x[1], reverse=True)[1]
+    sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+    [value, reps] = sorted_results[0]
+    if (value == 0):
+        try:
+            [value, reps] = sorted_results[1]
+        except:
+            pass
     binary_result = format(value, f"0{m_value}b")
     print(binary_result)
     return binary_result
@@ -48,7 +54,7 @@ if __name__ == '__main__':
 
     # Test several
     # TEST_NUMBER = 100
-    # TEST_RESULT = "000000000000000000100100000100101000110000000000000000000000"
+    # TEST_RESULT = "000000010000100000000000010001000000000000000000010010001100"
     # counter = 0
     # for _ in range(TEST_NUMBER):
     #     input_buffer = input_copy
