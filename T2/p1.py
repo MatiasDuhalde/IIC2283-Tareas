@@ -30,7 +30,7 @@ def rev(n):
 
 def fft(a, length, dft):
     """Fast Fourier Transform"""
-    A = [complex()] * length
+    A = [0] * length
     for i in range(length):
         A[rev(i)] = a[i]
     s = 1
@@ -76,7 +76,7 @@ def recursive_fft(a):
 
 def fft2(a, length, dft):
     """Fast Fourier Transform"""
-    A = [complex()] * length
+    A = [0] * length
     for i in range(length):
         A[rev(i)] = a[i]
     for s in range(1, int(math.log2(length)) + 1):
@@ -90,18 +90,18 @@ def fft2(a, length, dft):
                 A[k + j] = u + t
                 A[k + j + m // 2] = u - t
                 w = w * wm
-    if dft == -1:
-        for i in range(length):
-            A[i] /= length
+    # if dft == -1:
+    #     for i in range(length):
+    #         A[i] /= length
     return A
 
 
 def work(char, s_string, t_string, length, k_error):
     n = s_length
     m = t_length
-    S = [complex()] * length
-    T = [complex()] * length
-    M = [complex()] * length
+    S = [0] * length
+    T = [0] * length
+    M = [0] * length
     res = [0] * length
     if char in s_string[0:k_error]:
         char_range = k_error
@@ -111,16 +111,15 @@ def work(char, s_string, t_string, length, k_error):
         if (s_string[i] == char or (i + k_error < n and s_string[i + k_error] == char)):
             char_range = k_error
         if (char_range is not None and char_range >= 0):
-            S[i] = complex(1, 0)
+            S[i] = 1
         if char_range is None:
             char_range = 0
         char_range -= 1
     for i in range(m):
-        T[m - 1 - i] = complex(t_string[i] == char, 0)
+        T[m - 1 - i] = int(t_string[i] == char)
     S_fft = fft2(S, length, 1)
     T_fft = fft2(T, length, 1)
-    for i in range(length):
-        M[i] = S_fft[i] * T_fft[i]
+    M = [x * y for x, y in zip(S_fft, T_fft)]
     M_fft = fft2(M, length, -1)
     for i, x in enumerate(M_fft):
         answer[i] += math.floor(x.real + 0.5)
