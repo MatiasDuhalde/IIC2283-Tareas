@@ -62,7 +62,6 @@ def fft(a, length, dft):
 
 def work(char, s_string, t_string, length, k_error, answer):
     # Test function
-    print(char)
     n = len(s_string)
     m = len(t_string)
     S = [0j] * length
@@ -81,10 +80,8 @@ def work(char, s_string, t_string, length, k_error, answer):
         if char_range is None:
             char_range = 0
         char_range -= 1
-    print(S)
     for i in range(m):
         P[i] = ((t_string[i] == char) + 0j)
-    print(P)
     S_fft = fft(S, length, 1)
     P_fft = fft(P, length, 1)
     for i in range(length):
@@ -92,12 +89,9 @@ def work(char, s_string, t_string, length, k_error, answer):
     M_fft = fft(M, length, -1)
     curr_count = 0
     for i in range(length):
-        if math.floor(M_fft[i].real + 0.5) > 0:
-            res[i] = 2**CHAR_MAPPING[char]
-    print("res:", res)
+        res[i] = math.floor(M_fft[i].real + 0.5)
     for i in range(n):
         answer[i] += res[i]
-    print(answer)
     return res
 
 
@@ -115,7 +109,6 @@ def main():
     for char in DNA_CHARS:
         if char in s_string and char in t_string:
             locations[char] = work(char, s_string, t_string, length, k_error, answer)
-    print(answer)
 
     # matches = 0
     # current_char_index = 0
@@ -128,11 +121,15 @@ def main():
     #     matches += 1
     # print(matches)
 
-    max_match = 0
-    for i in range(t_length - 1, s_length):
-        max_match = max(max_match, answer[i])
-    min_hamming_distance = t_length - max_match
-    print(min_hamming_distance)
+    res_count = 0
+    current_count = 0
+    for k in answer:
+        if (k > 0):
+            current_count += 1
+        if (current_count == t_length):
+            res_count += 1
+            current_count = 0
+    print(res_count)
 
 
 if __name__ == '__main__':
