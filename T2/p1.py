@@ -19,6 +19,8 @@ input = input_buffer.readline
 # global
 padding = 0
 answer = []
+s_length = 0
+t_length = 0
 
 
 def rev(n):
@@ -28,7 +30,7 @@ def rev(n):
 
 def fft(a, length, dft):
     """Fast Fourier Transform"""
-    A = [0j] * length
+    A = [complex()] * length
     for i in range(length):
         A[rev(i)] = a[i]
     s = 1
@@ -53,12 +55,11 @@ def fft(a, length, dft):
 
 
 def work(char, s_string, t_string, length, k_error):
-    # Test function
-    n = len(s_string)
-    m = len(t_string)
-    S = [0j] * length
-    P = [0j] * length
-    M = [0j] * length
+    n = s_length
+    m = t_length
+    S = [complex()] * length
+    T = [complex()] * length
+    M = [complex()] * length
     res = [0] * length
     if char in s_string[0:k_error]:
         char_range = k_error
@@ -73,22 +74,21 @@ def work(char, s_string, t_string, length, k_error):
             char_range = 0
         char_range -= 1
     for i in range(m):
-        P[m - 1 - i] = ((t_string[i] == char) + 0j)
+        T[m - 1 - i] = complex(t_string[i] == char, 0)
     S_fft = fft(S, length, 1)
-    P_fft = fft(P, length, 1)
+    T_fft = fft(T, length, 1)
     for i in range(length):
-        M[i] = S_fft[i] * P_fft[i]
+        M[i] = S_fft[i] * T_fft[i]
     M_fft = fft(M, length, -1)
-    curr_count = 0
-    for i in range(length):
-        res[i] = math.floor(M_fft[i].real + 0.5)
-    for i in range(n):
-        answer[i] += res[i]
+    for i, x in enumerate(M_fft):
+        answer[i] += math.floor(x.real + 0.5)
     return res
 
 
 def main():
     """Main function"""
+    global s_length
+    global t_length
     [s_length, t_length, k_error] = [int(x) for x in input().split()]
     s_string = input().strip().decode()
     t_string = input().strip().decode()
