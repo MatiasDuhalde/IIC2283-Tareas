@@ -19,12 +19,11 @@ input = input_buffer.readline
 answer = []
 
 
-def recursive_fft(a):
+def recursive_fft(a, n):
     """
     Algorithm based on Wikipedia pseudocode (recursive)
     https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
     """
-    n = len(a)
 
     if n == 2:
         x_0, x_1 = a
@@ -32,14 +31,14 @@ def recursive_fft(a):
 
     n_half = n // 2
 
-    X_0 = recursive_fft(a[:n:2])
-    X_1 = recursive_fft(a[1:n:2])
+    X_0 = recursive_fft(a[:n:2], n_half)
+    X_1 = recursive_fft(a[1:n:2], n_half)
 
     X = [0] * n
 
     for k in range(n_half):
         p = X_0[k]
-        q = cmath.exp(cmath.pi * 2j * k / n) * X_1[k]
+        q = EXPONENTS_TABLE[n][k] * X_1[k]
         X[k] = p + q
         X[n_half + k] = p - q
     return X
@@ -75,15 +74,14 @@ def work(char, s_string, t_string, length, k_error):
     for i in range(m):
         T[m - 1 - i] = int(t_string[i] == char)
     # Get overlaps with FFT
-    S_fft = recursive_fft(S)
-    T_fft = recursive_fft(T)
+    S_fft = recursive_fft(S, length)
+    T_fft = recursive_fft(T, length)
     M = [x * y for x, y in zip(S_fft, T_fft)]
     # Inverse FFT
-    M_fft = recursive_fft([M[0]] + list(reversed(M[1:])))
-    M_n = len(M_fft)
+    M_fft = recursive_fft([M[0]] + list(reversed(M[1:])), length)
     # Finish inverse + save results to answer global
     for i, x in enumerate(M_fft):
-        answer[i] += math.floor(x.real / M_n + 0.5)
+        answer[i] += math.floor(x.real / length + 0.5)
     return res
 
 
@@ -96,6 +94,15 @@ def main():
 
     # Get length
     length = 2**math.ceil(math.log2(s_length + t_length))
+
+    # Build exponent table (for perfomance)
+    curr_n = length
+    while curr_n >= 4:
+        k_values_dict = {}
+        for k in range(curr_n // 2):
+            k_values_dict[k] = cmath.exp(2j * cmath.pi * k / curr_n)
+        EXPONENTS_TABLE[curr_n] = k_values_dict
+        curr_n //= 2
 
     # Define global answer
     global answer
