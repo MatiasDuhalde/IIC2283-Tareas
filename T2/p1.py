@@ -16,23 +16,21 @@ input_buffer = BytesIO(read(0, fstat(0).st_size))
 input_copy = copy(input_buffer)
 input = input_buffer.readline
 
+# global
+padding = 0
+answer = []
 
-def rev(idx, length):
-    ret = 0
-    i = 0
-    while (1 << i) < length:
-        ret = ret << 1
-        if idx & (1 << i):
-            ret |= 1
-        i += 1
-    return ret
+
+def rev(n):
+    res = int(format(n, f"0{padding}b")[::-1], 2)
+    return res
 
 
 def fft(a, length, dft):
     """Fast Fourier Transform"""
     A = [0j] * length
     for i in range(length):
-        A[rev(i, length)] = a[i]
+        A[rev(i)] = a[i]
     s = 1
     while (1 << s) <= length:
         m = 1 << s
@@ -50,11 +48,11 @@ def fft(a, length, dft):
         s += 1
     if dft == -1:
         for i in range(length):
-            A[i] = A[i] / length
+            A[i] /= length
     return A
 
 
-def work(char, s_string, t_string, length, k_error, answer):
+def work(char, s_string, t_string, length, k_error):
     # Test function
     n = len(s_string)
     m = len(t_string)
@@ -94,21 +92,17 @@ def main():
     [s_length, t_length, k_error] = [int(x) for x in input().split()]
     s_string = input().strip().decode()
     t_string = input().strip().decode()
-    length = 1
-    while (length <= s_length):
-        length *= 2
-    length *= 2
-    answer = [0] * length
-    locations = {}
-    for char in DNA_CHARS:
-        if char in s_string and char in t_string:
-            locations[char] = work(char, s_string, t_string, length, k_error, answer)
 
-    res_count = 0
-    for i in range(s_length):
-        if answer[i] == t_length:
-            res_count += 1
-    print(res_count)
+    global padding
+    global answer
+    padding = math.ceil(math.log2(2*s_length))
+    length = 2**padding
+    answer = [0] * length
+    for char in DNA_CHARS:
+        work(char, s_string, t_string, length, k_error)
+
+    # Optimized
+    print(sum([1 for i in range(s_length) if answer[i] == t_length]))
 
 
 if __name__ == '__main__':
