@@ -36,7 +36,7 @@ def fft(a, length, dft):
     s = 1
     m = 1 << s
     while m <= length:
-        wm = complex(cmath.cos(dft * 2 * cmath.pi / m), cmath.sin(dft * 2 * cmath.pi / m))
+        wm = complex(cmath.cos(-dft * 2 * cmath.pi / m), cmath.sin(-dft * 2 * cmath.pi / m))
         for k in range(0, length, m):
             w = complex(1, 0)
             j = 0
@@ -49,6 +49,47 @@ def fft(a, length, dft):
                 j += 1
         s += 1
         m = 1 << s
+    return A
+
+
+def recursive_fft(a):
+    n = len(a)
+
+    if n == 2:
+        a_0, a_1 = a
+        return [a_0 + a_1, a_0 - a_1]
+
+    n_half = n // 2
+
+    y_0 = recursive_fft(a[:n_half//2:2])
+    y_1 = recursive_fft(a[1:n_half//2:2])
+
+    res = [0] * n
+
+    for k in range(n_half):
+        a = y_0[k]
+        b = y_1[k]
+        res[n_half + k] = a - b
+
+    return res
+
+
+def fft2(a, length, dft):
+    """Fast Fourier Transform"""
+    A = [complex()] * length
+    for i in range(length):
+        A[rev(i)] = a[i]
+    for s in range(1, int(math.log2(length)) + 1):
+        m = 2**s
+        wm = cmath.exp(dft * -2j * cmath.pi / m)
+        for k in range(0, length, m):
+            w = complex(1, 0)
+            for j in range(m // 2):
+                t = w * A[k + j + m // 2]
+                u = A[k + j]
+                A[k + j] = u + t
+                A[k + j + m // 2] = u - t
+                w = w * wm
     if dft == -1:
         for i in range(length):
             A[i] /= length
@@ -76,11 +117,11 @@ def work(char, s_string, t_string, length, k_error):
         char_range -= 1
     for i in range(m):
         T[m - 1 - i] = complex(t_string[i] == char, 0)
-    S_fft = fft(S, length, 1)
-    T_fft = fft(T, length, 1)
+    S_fft = fft2(S, length, 1)
+    T_fft = fft2(T, length, 1)
     for i in range(length):
         M[i] = S_fft[i] * T_fft[i]
-    M_fft = fft(M, length, -1)
+    M_fft = fft2(M, length, -1)
     for i, x in enumerate(M_fft):
         answer[i] += math.floor(x.real + 0.5)
     return res
