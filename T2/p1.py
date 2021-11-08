@@ -61,16 +61,16 @@ def recursive_fft(a):
 
     n_half = n // 2
 
-    y_0 = recursive_fft(a[:n_half//2:2])
-    y_1 = recursive_fft(a[1:n_half//2:2])
+    y_0 = recursive_fft(a[:n:2])
+    y_1 = recursive_fft(a[1:n:2])
 
     res = [0] * n
 
     for k in range(n_half):
         a = y_0[k]
-        b = y_1[k]
+        b = cmath.exp(cmath.pi * 2j * k / n) * y_1[k]
+        res[k] = a + b
         res[n_half + k] = a - b
-
     return res
 
 
@@ -90,9 +90,9 @@ def fft2(a, length, dft):
                 A[k + j] = u + t
                 A[k + j + m // 2] = u - t
                 w = w * wm
-    # if dft == -1:
-    #     for i in range(length):
-    #         A[i] /= length
+    if dft == -1:
+        for i in range(length):
+            A[i] /= length
     return A
 
 
@@ -117,12 +117,13 @@ def work(char, s_string, t_string, length, k_error):
         char_range -= 1
     for i in range(m):
         T[m - 1 - i] = int(t_string[i] == char)
-    S_fft = fft2(S, length, 1)
-    T_fft = fft2(T, length, 1)
+    S_fft = recursive_fft(S)
+    T_fft = recursive_fft(T)
     M = [x * y for x, y in zip(S_fft, T_fft)]
-    M_fft = fft2(M, length, -1)
+    M_fft = recursive_fft([M[0]] + list(reversed(M[1:])))
+    M_n = len(M_fft)
     for i, x in enumerate(M_fft):
-        answer[i] += math.floor(x.real + 0.5)
+        answer[i] += math.floor(x.real / M_n + 0.5)
     return res
 
 
@@ -136,7 +137,7 @@ def main():
 
     global padding
     global answer
-    padding = math.ceil(math.log2(2*s_length))
+    padding = math.ceil(math.log2(s_length + t_length))
     length = 2**padding
     answer = [0] * length
     for char in DNA_CHARS:
