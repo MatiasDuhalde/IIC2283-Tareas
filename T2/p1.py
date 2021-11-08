@@ -34,8 +34,8 @@ def fft(a, length, dft):
     for i in range(length):
         A[rev(i)] = a[i]
     s = 1
-    while (1 << s) <= length:
-        m = 1 << s
+    m = 1 << s
+    while m <= length:
         wm = complex(cmath.cos(dft * 2 * cmath.pi / m), cmath.sin(dft * 2 * cmath.pi / m))
         for k in range(0, length, m):
             w = complex(1, 0)
@@ -48,6 +48,7 @@ def fft(a, length, dft):
                 w = w * wm
                 j += 1
         s += 1
+        m = 1 << s
     if dft == -1:
         for i in range(length):
             A[i] /= length
