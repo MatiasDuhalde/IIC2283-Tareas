@@ -1,5 +1,5 @@
 """
-Solución al problema 1 de la Tarea 2
+Solucion al problema 1 de la Tarea 2
 """
 from os import read, fstat
 from io import BytesIO
