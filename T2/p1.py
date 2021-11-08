@@ -9,12 +9,6 @@ import math
 
 
 DNA_CHARS = ["A", "T", "G", "C"]
-CHAR_MAPPING = {
-    "A": 1,
-    "T": 2,
-    "G": 3,
-    "C": 4,
-}
 
 # Use fast read
 input_buffer = BytesIO(read(0, fstat(0).st_size))
@@ -81,7 +75,7 @@ def work(char, s_string, t_string, length, k_error, answer):
             char_range = 0
         char_range -= 1
     for i in range(m):
-        P[i] = ((t_string[i] == char) + 0j)
+        P[m - 1 - i] = ((t_string[i] == char) + 0j)
     S_fft = fft(S, length, 1)
     P_fft = fft(P, length, 1)
     for i in range(length):
@@ -110,25 +104,10 @@ def main():
         if char in s_string and char in t_string:
             locations[char] = work(char, s_string, t_string, length, k_error, answer)
 
-    # matches = 0
-    # current_char_index = 0
-    # current_char = t_string[0]
-    # for k in range(s_length):
-    #     if k in locations[current_char]:
-    #         matches += locations[k][current_char_index]
-
-    #     if k in locations:
-    #     matches += 1
-    # print(matches)
-
     res_count = 0
-    current_count = 0
-    for k in answer:
-        if (k > 0):
-            current_count += 1
-        if (current_count == t_length):
+    for i in range(s_length):
+        if answer[i] == t_length:
             res_count += 1
-            current_count = 0
     print(res_count)
 
 
