@@ -99,7 +99,7 @@ def solovay_strassen_test(number: int, k: int) -> bool:
     si number es compuesto, y 0 si es primo.
     # Fuente: Algoritmo de clases + Paper de Solovay y Strassen
     # A Fast Monte-Carlo Test for Primality. Solovay, R; Strassen, V. SIAM Journal on Computing;
-    # Philadelphia Tomo 6, N.º 1,  (Mar 1977): 2. DOI:10.1137/0206006 
+    # Philadelphia Tomo 6, N.º 1,  (Mar 1977): 2. DOI:10.1137/0206006
     # https://buscador.bibliotecas.uc.cl/permalink/f/cjn0ra/TN_cdi_proquest_journals_918499739
 
     Argumentos :
@@ -137,13 +137,13 @@ def get_prime(lower_bound: int, upper_bound: int, k=ITERATIONS) -> int:
     """
     if upper_bound % 2 == 0:
         upper_bound -= 1
-    new_lower_bound = log(upper_bound)
+    new_lower_bound = int(log(upper_bound))
     if new_lower_bound > lower_bound:
         lower_bound = new_lower_bound
     for number in range(upper_bound, lower_bound, -2):
         if solovay_strassen_test(number, k):
             return number
-        return -1
+    return -1
 
 
 def main():
