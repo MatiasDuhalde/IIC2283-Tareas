@@ -140,7 +140,7 @@ def get_prime(lower_bound: int, upper_bound: int, k=ITERATIONS) -> int:
     new_lower_bound = int(log(upper_bound))
     if new_lower_bound > lower_bound:
         lower_bound = new_lower_bound
-    for number in range(upper_bound, lower_bound, -2):
+    for number in range(upper_bound, lower_bound - 1, -2):
         if solovay_strassen_test(number, k):
             return number
     return -1
