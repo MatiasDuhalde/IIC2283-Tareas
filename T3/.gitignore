@@ -1,0 +1,8 @@
+__pycache__/
+*.txt
+
+utils.py
+
+*.zip
+
+.vscode
