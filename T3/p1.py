@@ -4,7 +4,7 @@ Solucion al problema 1 de la Tarea 3
 from os import read, fstat
 from io import BytesIO
 from random import randint
-from math import log
+from math import log, gcd
 
 # Use fast read
 input_buffer = BytesIO(read(0, fstat(0).st_size))
@@ -45,54 +45,6 @@ def jacobi(a_value, number):
         a_value, number = number, a_value
 
 
-def exp_mod(a_value: int, b_value: int, number: int) -> int:
-    """
-    Algoritmo de exponenciacion modular
-    # Fuente: Mi tarea de IIC3253 2021-1
-    # https://github.com/MatiasDuhalde/IIC3253-2021-1-MatiasDuhalde/blob/master/Tarea%202/Pregunta%202/pregunta2.ipynb
-
-    Args:
-        a_value: int - a_value >= 0
-        b_value: int - b_value >= 0
-        number: int - number > 0
-
-    Returns:
-        int: a_value**b_value mod number
-    """
-    if number == 1:
-        return 0
-    if b_value == 0:
-        return 1
-    a_value = a_value % number
-    if a_value == 0:
-        return 0
-    c_value = 1
-    while b_value > 0:
-        if (b_value % 2) != 0:
-            c_value = (c_value * a_value) % number
-        b_value //= 2
-        a_value = (a_value * a_value) % number
-    return c_value
-
-
-def gcd(a_value: int, b_value: int) -> tuple[int, int, int]:
-    """
-    Algoritmo de Euclides. Calcula GCD(a_value, b_value)
-
-    Argumentos:
-        a_value: int - a_value > 0
-        b_value: int - a_value >= b_value > 0
-
-    Retorna:
-        int - GCD(a_value, b_value) maximo comun divisor GCD(a, b)
-    """
-    while b_value > 0:
-        temp = b_value
-        b_value = a_value % b_value
-        a_value = temp
-    return a_value
-
-
 def solovay_strassen_test(number: int, k: int) -> bool:
     """
     Retorna True si number es primo, y False en caso contrario, con probabilidad de error de 2^(-k)
@@ -117,7 +69,7 @@ def solovay_strassen_test(number: int, k: int) -> bool:
         gcd_a_n = gcd(random_a, number)
         if gcd_a_n > 1:
             return False
-        epsilon = exp_mod(random_a, (number - 1) // 2, number)
+        epsilon = pow(random_a, (number - 1) // 2, number)
         delta = jacobi(random_a, number) % number
         if epsilon != delta:
             return False
