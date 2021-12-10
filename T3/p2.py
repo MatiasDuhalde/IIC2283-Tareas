@@ -20,14 +20,14 @@ def sieve_of_erathostenes(n_value):
     Retorna:
         List[int] - Lista de numeros coprimos de n_value (menores)
     """
-    result = [True] * (n_value)
-    result[0] = False
+    coprimes = [True] * (n_value)
+    coprimes[0] = False
     for i in range(2, n_value // 2 + 1):
         if n_value % i == 0:
-            result[i] = False
+            coprimes[i] = False
             for j in range(i * 2, n_value, i):
-                result[j] = False
-    return [i for i in range(len(result)) if result[i]]
+                coprimes[j] = False
+    return [i for i in range(len(coprimes)) if coprimes[i]]
 
 
 def main():
@@ -36,23 +36,23 @@ def main():
     [n_value, k_value] = [int(x) for x in input().split()]
 
     # Get coprimes
-    result = sieve_of_erathostenes(n_value)
+    coprimes = sieve_of_erathostenes(n_value)
 
     # Get combinations
-    n_combs = comb(len(result), k_value)
+    n_combs = comb(len(coprimes), k_value)
 
     if n_combs == 0:
-        # Output result
+        # Output coprimes
         print(-1)
     else:
         # Get least significant digit
-        lsd = 0
+        lsf = 0
         for _ in range(ceil(log10(n_combs)) + 1):
-            lsd = n_combs % 10
-            if lsd != 0:
+            lsf = n_combs % 10
+            if lsf != 0:
                 break
             n_combs //= 10
-        print(lsd)
+        print(lsf)
 
 
 if __name__ == '__main__':
